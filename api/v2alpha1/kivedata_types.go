@@ -31,8 +31,6 @@ type KiveDataSpec struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
-//// +kubebuilder:webhook:path=/mutate-kive-kivedata,mutating=true,failurePolicy=fail,groups=kivebpf.san7o.github.io,resources=kivedata,verbs=create;update,versions=v1;v2alpha1,name=mutate.kivedata.kivebpf.san7o.github.io,admissionReviewVersions=v1,sideEffects=none
-//// +kubebuilder:webhook:path=/validate-kive-kivedata,mutating=false,failurePolicy=fail,groups=kivebpf.san7o.github.io,resources=kivedata,verbs=create;update,versions=v1;v2alpha1,name=validate.kivedata.kivebpf.san7o.github.io,sideEffects=None,admissionReviewVersions=v1
 
 type KiveData struct {
 	metav1.TypeMeta   `json:",inline"`

@@ -28,8 +28,6 @@ type KivePolicySpec struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
-//// +kubebuilder:webhook:path=/mutate-kive-kivepolicy,mutating=true,failurePolicy=fail,groups=kivebpf.san7o.github.io,resources=kivepolicies,verbs=create;update,versions=v1;v2alpha1,name=mutate.kivepolicy.kivebpf.san7o.github.io,admissionReviewVersions=v1,sideEffects=none
-//// +kubebuilder:webhook:path=/validate-kive-kivepolicy,mutating=false,failurePolicy=fail,groups=kivebpf.san7o.github.io,resources=kivepolivies,verbs=create;update,versions=v1;v2alpha1,name=validate.kivepolicy.kivebpf.san7o.github.io,sideEffects=None,admissionReviewVersions=v1
 
 type KivePolicy struct {
 	metav1.TypeMeta   `json:",inline"`
