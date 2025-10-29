@@ -205,46 +205,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = ctrl.NewWebhookManagedBy(kivePodMgr).
-		For(&kivev2alpha1.KivePolicy{}).
-		Complete()
-	if err != nil {
-		setupLog.Error(err, "unable to start webhook of KivePolicy")
-		os.Exit(1)
-	}
-
-	err = ctrl.NewWebhookManagedBy(kivePodMgr).
-		For(&kivev2alpha1.KiveData{}).
-		Complete()
-	if err != nil {
-		setupLog.Error(err, "unable to start webhook of KiveData")
-		os.Exit(1)
-	}
-
-	/*
-		// Mutate and Validate are not needed but are a good addition. They
-		// will be supported in the future.
-		if os.Getenv("ENABLE_WEBHOOKS") != "false" {
-			// Using the pod manager for the webhook
-			if err = (&kivev2alpha1.KivePolicy{}).SetupMutateWebhookWithManager(kivePodMgr); err != nil {
-				setupLog.Error(err, "unable to create webhook", "webhook", "KivePolicyMutate")
-				os.Exit(1)
-			}
-			if err = (&kivev2alpha1.KivePolicy{}).SetupValidateWebhookWithManager(kivePodMgr); err != nil {
-				setupLog.Error(err, "unable to create webhook", "webhook", "KivePolicyValidate")
-				os.Exit(1)
-			}
-			if err = (&kivev2alpha1.KiveData{}).SetupMutateWebhookWithManager(kivePodMgr); err != nil {
-				setupLog.Error(err, "unable to create webhook", "webhook", "KiveDataMutate")
-				os.Exit(1)
-			}
-			if err = (&kivev2alpha1.KiveData{}).SetupValidateWebhookWithManager(kivePodMgr); err != nil {
-				setupLog.Error(err, "unable to create webhook", "webhook", "KiveDataValidate")
-				os.Exit(1)
-			}
-		}
-	*/
-
 	// +kubebuilder:scaffold:builder
 
 	if err := kivePolicyMgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {

@@ -13,9 +13,5 @@
 package v2alpha1
 
 const (
-	Namespace                     = "kivebpf-system"
-	HivePolicyMutateWebhookPath   = "/mutate-kive-kivepolicy"
-	HivePolicyValidateWebhookPath = "/validate-kive-kivepolicy"
-	HiveDataMutateWebhookPath     = "/mutate-kive-kivedata"
-	HiveDataValidateWebhookPath   = "/validate-kive-kivedata"
+	Namespace = "kivebpf-system"
 )

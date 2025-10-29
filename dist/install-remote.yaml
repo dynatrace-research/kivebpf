@@ -11,20 +11,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kivebpf-system/kivebpf-serving-cert
     controller-gen.kubebuilder.io/version: v0.16.1
   name: kivedata.kivebpf.san7o.github.io
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kivebpf-webhook-service
-          namespace: kivebpf-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: kivebpf.san7o.github.io
   names:
     kind: KiveData
@@ -124,20 +113,9 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    cert-manager.io/inject-ca-from: kivebpf-system/kivebpf-serving-cert
     controller-gen.kubebuilder.io/version: v0.16.1
   name: kivepolicies.kivebpf.san7o.github.io
 spec:
-  conversion:
-    strategy: Webhook
-    webhook:
-      clientConfig:
-        service:
-          name: kivebpf-webhook-service
-          namespace: kivebpf-system
-          path: /convert
-      conversionReviewVersions:
-      - v1
   group: kivebpf.san7o.github.io
   names:
     kind: KivePolicy
@@ -681,22 +659,6 @@ spec:
   selector:
     control-plane: manager
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kivebpf
-  name: kivebpf-webhook-service
-  namespace: kivebpf-system
-spec:
-  ports:
-  - port: 443
-    protocol: TCP
-    targetPort: 9443
-  selector:
-    control-plane: manager
----
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -732,10 +694,6 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 20
         name: kivebpf
-        ports:
-        - containerPort: 9443
-          name: webhook-server
-          protocol: TCP
         readinessProbe:
           httpGet:
             path: /readyz
@@ -753,9 +711,6 @@ spec:
           privileged: true
           runAsNonRoot: false
         volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs
-          name: cert
-          readOnly: true
         - mountPath: /run/containerd/containerd.sock
           name: containerd-sock
           readOnly: false
@@ -768,10 +723,6 @@ spec:
       serviceAccountName: kivebpf-manager
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: cert
-        secret:
-          defaultMode: 420
-          secretName: webhook-server-cert
       - hostPath:
           path: /run/containerd/containerd.sock
           type: Socket
@@ -780,35 +731,3 @@ spec:
           path: /proc
           type: Directory
         name: proc
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  labels:
-    app.kubernetes.io/component: certificate
-    app.kubernetes.io/created-by: kivebpf
-    app.kubernetes.io/instance: serving-cert
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: certificate
-    app.kubernetes.io/part-of: kivebpf
-  name: kivebpf-serving-cert
-  namespace: kivebpf-system
-spec:
-  dnsNames:
-  - kivebpf-webhook-service.kivebpf-system.svc
-  - kivebpf-webhook-service.kivebpf-system.svc.cluster.local
-  issuerRef:
-    kind: Issuer
-    name: kivebpf-selfsigned-issuer
-  secretName: webhook-server-cert
----
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kivebpf
-  name: kivebpf-selfsigned-issuer
-  namespace: kivebpf-system
-spec:
-  selfSigned: {}
